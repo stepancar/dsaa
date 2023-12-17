@@ -1,0 +1,13 @@
+{
+  "name": "dsaa",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest",
+    "lottie-web": "latest",
+    "canvas": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
