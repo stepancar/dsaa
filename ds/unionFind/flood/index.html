@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demonstration of union find based flood problem solution</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="400" height="400" style="border: 1px black solid; margin: 100px;"></canvas>
+        <script type="module">
+            import { UnionFind } from '../index.js';
+            const canvas = document.getElementById('canvas');
+
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+            })
+            let lastPoint = [0, 0];
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDrawing) {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.x - rect.x;
+                    const y = e.y - rect.y;
+
+                    drawPixel(x, y, 'black')
+                    ctx.lineStyle = 'black'
+                    ctx.lineWidth = 2;
+                    ctx.lineTo(x, y, lastPoint[0], lastPoint[1])
+                    lastPoint = [x, y]
+                    ctx.closePath();
+                }
+            })
+
+            function drawPixel(x, y, color) {
+                ctx.fillStyle = color
+                ctx.fillRect(x, y, 1, 1)
+            }
+        </script>
+    </body>
+</html>
