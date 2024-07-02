@@ -41,7 +41,7 @@ describe('Heap', () => {
     });
 });
 
-describe.only('heappush', () => {
+describe('heappush', () => {
     test('works', () => {
 
         const heap = [];
