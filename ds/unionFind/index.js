@@ -1,33 +1,61 @@
-export class UnionFind {
-    size = 0;
-    data = [];
-    constructor(size) {
-        this.size = size;
+/**
+ * Union find with quick union and path compression
+ */
+export function UnionFind(size) {
+    const parentOf = Array.from({ length: size }, (_, i) => i);
+    const sz = Array.from({ length: size }, () => 1);
 
-        this.data = Array.from({ length: size }, (_, i) => i);
-    }
+    let numberOfComponents = size;
 
-    findRoot(index) {
-        if (this.data[index] === index) {
-            return index;
+    function findRoot(i) {
+        while (i !== parentOf[i]) {
+            i = parentOf[i]
         }
 
-        this.data[index] = this.findRoot(this.data[index]);
-        return this.data[index];
+        return i;
     }
 
-    union(index1, index2) {
-        const root1 = this.findRoot(index1);
-        const root2 = this.findRoot(index2);
+    function compressPath(i, r) {
+        while (i !== r) {
+            const parent = parentOf[i];
+            parentOf[i] = r;
+            i = parent;
+        }
+    }
+    
+    function root(i) {
+        const r = findRoot(i);
+        compressPath(i, r);
+        return r;
+    }
+
+    function union(p, q) {
+        const root1 = root(p);
+        const root2 = root(q);
 
         if (root1 === root2) {
             return;
         }
 
-        this.data[root1] = root2;
+        if (sz[root1] < sz[root2]) {
+            parentOf[root1] = root2;
+            sz[root1] += sz[root2];
+        } else {
+            parentOf[root2] = root1;
+            sz[root2] += sz[root1];
+        }
+        numberOfComponents--;
     }
 
-    isConnected(index1, index2) {
-        return this.findRoot(index1) === this.findRoot(index2);
+    function connected(p, q) {
+        return root(p) === root(q);
+    }
+
+    return {
+        connected,
+        union,
+        get numberOfComponents() {
+            return numberOfComponents;
+        }
     }
 }
