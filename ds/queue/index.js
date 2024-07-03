@@ -8,6 +8,7 @@ export function Queue() {
         value: null,
     }
     let tail = head;
+    let size = 0;
 
     function push(value) {
         tail.next = {
@@ -15,6 +16,7 @@ export function Queue() {
             value,
         }
         tail = tail.next
+        size ++
     }
 
     function pop() {
@@ -24,6 +26,7 @@ export function Queue() {
                 tail = head
             }
             head.next = head.next.next;
+            size--;
             return result;
         }
         return null;
@@ -31,6 +34,9 @@ export function Queue() {
 
     return {
         push,
-        pop
+        pop,
+        get size() {
+            return size
+        }
     }
 }

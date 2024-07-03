@@ -8,10 +8,15 @@ describe('Queue', () => {
         q.push(1)
         q.push(2)
         q.push(3)
+        expect(q.size).toBe(3);
         expect(q.pop()).toBe(1);
+        expect(q.size).toBe(2);
         expect(q.pop()).toBe(2);
+        expect(q.size).toBe(1);
         expect(q.pop()).toBe(3);
+        expect(q.size).toBe(0);
         expect(q.pop()).toBe(null);
+        
         q.push(1)
         expect(q.pop()).toBe(1);
         expect(q.pop()).toBe(null);
