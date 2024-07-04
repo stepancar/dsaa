@@ -1,30 +1,31 @@
-export function karatsuba(num1, num2) {
+export function multiply(num1, num2) {
     if (num1.length === 1 || num2.length === 1) {
         if (num1.length === 1) {
             const res = multiplyArrayByDigit(num2, num1[0])
             return res;
         } else {
-
             const res = multiplyArrayByDigit(num1, num2[0])
             return res;
         }
     }
 
     const n = Math.max(num1.length, num2.length);
-    const n2 = Math.floor(n/2);
+    num1 = pad(num1, n)
+    num2 = pad(num2, n)
+    const n2 = Math.floor(n / 2);
 
     const [a, b] = split(num1);
     const [c, d] = split(num2);
 
-    const ac = karatsuba(a, c);
-    const bd = karatsuba(b, d);
-    const abcd = karatsuba(sum(a, b), sum(c, d));
+    const ac = multiply(a, c);
+    const bd = multiply(b, d);
+    const abcd = multiply(sum(a, b), sum(c, d));
     const magic = subtractDigitArrays(subtractDigitArrays(abcd, ac), bd);
     
     const res = sum(
             sum(
-                shiftTimes(ac, 2*n2),
-                shiftTimes(magic, n2)
+                multiplyBy10NTimes(ac, 2 * n2),
+                multiplyBy10NTimes(magic, n2)
             ),
             bd
         )
@@ -32,15 +33,29 @@ export function karatsuba(num1, num2) {
     return res;
 }
 
+function pad(arr, n) {
+    while (arr.length < n) {
+        arr.unshift(0);
+    }
+    return arr;
+}
+
 function split(arr) {
     const n = arr.length;
 
-    const yo = Math.ceil(n/2)
+    const mid = Math.ceil(n/2)
     
-    return [arr.slice(0, yo), arr.slice(yo)]
+    return [arr.slice(0, mid), arr.slice(mid)]
 }
 
 function sum(arr1, arr2) {
+    // TODO: check why it happens
+    while (arr1.length > 1 && arr1[0] === 0) {
+        arr1.shift();
+    }
+    while (arr2.length > 1 && arr2[0] === 0) {
+        arr2.shift();
+    }
     let result = [];
     let carry = 0;
     let i = arr1.length - 1;
@@ -61,20 +76,6 @@ function sum(arr1, arr2) {
 
 
 function subtractDigitArrays(arr1, arr2) {
-    // Function to check if arr1 is smaller than arr2
-    function isSmaller(arr1, arr2) {
-        if (arr1.length < arr2.length) return true;
-
-        return false;
-    }
-
-    // Ensure arr1 >= arr2, otherwise swap and flag result as negative
-    let negative = false;
-    if (isSmaller(arr1, arr2)) {
-        [arr1, arr2] = [arr2, arr1];
-        negative = true;
-    }
-
     let result = [];
     let borrow = 0;
     let i = arr1.length - 1;
@@ -101,25 +102,17 @@ function subtractDigitArrays(arr1, arr2) {
     // Reverse the result to get the correct order
     result.reverse();
 
-    // If the result is negative, add a negative sign
-    if (negative) result.unshift('-');
-
     return result;
 }
 
-function shiftTimes(arr, n) {
-    const res = [...arr]
+function multiplyBy10NTimes(arr, n) {
     for (let i = 0; i< n; i++) {
-        res.push(0)
-    } 
-    return res
+        arr.push(0)
+    }
+    return arr
 }
 
 function multiplyArrayByDigit(arr, multiplier) {
-    if (!Array.isArray(arr) || arr.some(digit => digit < 0 || digit > 9) || multiplier < 0 || multiplier > 9) {
-        throw new Error("Invalid input");
-    }
-
     let carry = 0;
     let result = [];
 
@@ -133,6 +126,10 @@ function multiplyArrayByDigit(arr, multiplier) {
     while (carry > 0) {
         result.unshift(carry % 10);
         carry = Math.floor(carry / 10);
+    }
+
+    while (result.length > 1 && result[0] === 0) {
+        result.shift();
     }
 
     return result;
