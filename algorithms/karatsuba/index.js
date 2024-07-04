@@ -2,12 +2,10 @@ export function karatsuba(num1, num2) {
     if (num1.length === 1 || num2.length === 1) {
         if (num1.length === 1) {
             const res = multiplyArrayByDigit(num2, num1[0])
-            console.log('result', num1, num2, res)
             return res;
         } else {
 
             const res = multiplyArrayByDigit(num1, num2[0])
-            console.log('result', num1, num2, res)
             return res;
         }
     }
@@ -16,21 +14,13 @@ export function karatsuba(num1, num2) {
     const n2 = Math.floor(n/2);
 
     const [a, b] = split(num1);
-    console.log('num1', num1)
-    console.log(`a: ${a}, b: ${b}`)
     const [c, d] = split(num2);
-    console.log('num2', num2)
-    console.log(`c: ${c}, d: ${d}`)
 
     const ac = karatsuba(a, c);
-    console.log('ac', ac)
     const bd = karatsuba(b, d);
-    console.log('bd', bd);
     const abcd = karatsuba(sum(a, b), sum(c, d));
-    console.log(`(a+b)(c+d) = (${a}+${b})*(${c}+${d}) = (${sum(a, b)})*(${sum(c, d)})`)
     const magic = subtractDigitArrays(subtractDigitArrays(abcd, ac), bd);
-    console.log(`abcd ${abcd} - ac ${ac} - bd ${bd} = ${magic}`)
-
+    
     const res = sum(
             sum(
                 shiftTimes(ac, 2*n2),
@@ -39,15 +29,15 @@ export function karatsuba(num1, num2) {
             bd
         )
 
-    console.log('result', num1, num2, res)
-
     return res;
 }
 
 function split(arr) {
     const n = arr.length;
+
+    const yo = Math.ceil(n/2)
     
-    return [arr.slice(0, Math.floor(n/2)), arr.slice(Math.floor(n/2))]
+    return [arr.slice(0, yo), arr.slice(yo)]
 }
 
 function sum(arr1, arr2) {
