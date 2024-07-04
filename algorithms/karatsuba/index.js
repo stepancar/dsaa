@@ -135,6 +135,5 @@ function multiplyArrayByDigit(arr, multiplier) {
         carry = Math.floor(carry / 10);
     }
 
-    console.log('multiply', arr, multiplier, result)
     return result;
 }
