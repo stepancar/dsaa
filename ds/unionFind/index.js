@@ -39,10 +39,10 @@ export function UnionFind(size) {
 
         if (sz[root1] < sz[root2]) {
             parentOf[root1] = root2;
-            sz[root1] += sz[root2];
+            sz[root2] += sz[root1];
         } else {
             parentOf[root2] = root1;
-            sz[root2] += sz[root1];
+            sz[root1] += sz[root2];
         }
         numberOfComponents--;
     }
@@ -54,6 +54,8 @@ export function UnionFind(size) {
     return {
         connected,
         union,
+        sz,
+        root,
         get numberOfComponents() {
             return numberOfComponents;
         }
